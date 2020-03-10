@@ -1,0 +1,24 @@
+{
+  "name": "axios-miniprogram",
+  "version": "1.0.0",
+  "description": "axios miniprogram adapter",
+  "main": "adapter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdonisLau/axios-miniprogram.git"
+  },
+  "keywords": [
+    "axios",
+    "miniprogram",
+    "adapter"
+  ],
+  "author": "Adonis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AdonisLau/axios-miniprogram/issues"
+  },
+  "homepage": "https://github.com/AdonisLau/axios-miniprogram#readme"
+}
