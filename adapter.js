@@ -62,7 +62,7 @@ const BEFORE = {
   upload(options, config) {
     options.name = config.name;
     options.filePath = config.filePath;
-    options.formData = options.data || {};
+    options.formData = options.formData || {};
   },
 
   download(options, config) {
@@ -180,7 +180,7 @@ export default function adapter(config) {
         getMap(SUCCESS, method)(res, response);
 
         settle(resolve, reject, response);
-        
+
         request = null;
       },
 
@@ -194,7 +194,7 @@ export default function adapter(config) {
         if (request) {
           getMap(COMPLETE, method)(request, config);
         }
-  
+
         reject(createError(e.errMsg || 'Network Error', config, null, request));
 
         request = null;

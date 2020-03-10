@@ -11,9 +11,7 @@ import axios from './axios';
 import adapter from './adapter';
 
 let instance = axios.create({
-  adapter,
-  // 必须
-  transformRequest: []
+  adapter
 });
 ```
 
@@ -28,7 +26,7 @@ const promise = instance({
   url: 'xxx',                   // 开发者服务器地址
   name: 'file',                 // 文件对应的 key，开发者在服务端可以通过这个 key 获取文件的二进制内容
   filePath: 'xxx',              // 要上传文件资源的路径 (本地路径)
-  data: {},                     // 额外参数 
+  formData: {},                 // 额外参数 
   onUploadProgress(e) {         // 获取上传进度   
     console.log(e);
   }
