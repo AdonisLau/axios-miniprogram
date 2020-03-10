@@ -3,7 +3,7 @@
 ## 用法 ##
 
 * 下载个[axios](https://github.com/axios/axios/edit/master/dist/axios.min.js)
-* 下载个`axios`的[小程序适配器](https://github.com/AdonisLau/axios-miniprogram-adapter/adapter.js)
+* 下载个`axios`的[小程序适配器](https://github.com/AdonisLau/axios-miniprogram-adapter/edit/master/adapter.js)
 * 安装一下
 
 ```javascript
