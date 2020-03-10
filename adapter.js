@@ -62,7 +62,7 @@ const BEFORE = {
   upload(options, config) {
     options.name = config.name;
     options.filePath = config.filePath;
-    options.formData = options.formData || {};
+    options.formData = config.formData || {};
   },
 
   download(options, config) {
