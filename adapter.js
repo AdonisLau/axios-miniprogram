@@ -73,7 +73,11 @@ const BEFORE = {
 };
 
 const AFTER = {
-  defaults: noop,
+  defaults(request, config) {
+    if (config.onHeadersReceived) {
+      request.onHeadersReceived(config.onHeadersReceived);
+    }
+  },
 
   upload(request, config) {
     if (config.onUploadProgress) {
@@ -89,7 +93,11 @@ const AFTER = {
 };
 
 const COMPLETE = {
-  defaults: noop,
+  defaults(request, config) {
+    if (config.onHeadersReceived) {
+      request.offHeadersReceived(config.onHeadersReceived);
+    }
+  },
 
   upload(request, config) {
     if (config.onUploadProgress) {
@@ -126,6 +134,17 @@ function getMap(map, method) {
   return map[method] || map.defaults;
 }
 
+function triggerSelfAndDefaults(map, method, args) {
+  let fn = getMap(map, method);
+  let fns = [fn];
+
+  if (fn !== map.defaults) {
+    fns.push(map.defaults);
+  }
+
+  fns.forEach(cb => cb.apply(null, args));
+}
+
 /**
  * 基于axios的wx.request和wx.uploadFile适配器
  */
@@ -153,6 +172,7 @@ export default function adapter(config) {
     let options = {
       url,
       header: config.headers,
+      timeout: config.timeout || 0,
       dataType: responseType || 'json',
       responseType: responseType === 'arraybuffer' ? 'arraybuffer' : 'text',
 
@@ -162,10 +182,6 @@ export default function adapter(config) {
         }
 
         status = 'succeed';
-
-        if (request) {
-          getMap(COMPLETE, method)(request, config);
-        }
 
         res.header.cookies = res.cookies || [];
 
@@ -180,8 +196,6 @@ export default function adapter(config) {
         getMap(SUCCESS, method)(res, response);
 
         settle(resolve, reject, response);
-
-        request = null;
       },
 
       fail(e) {
@@ -191,19 +205,16 @@ export default function adapter(config) {
 
         status = 'failed';
 
-        if (request) {
-          getMap(COMPLETE, method)(request, config);
-        }
-
         reject(createError(e.errMsg || 'Network Error', config, null, request));
+      },
 
-        request = null;
+      complete() {
+        if (request) {
+          triggerSelfAndDefaults(COMPLETE, method, [ request, config ]);
+          request = null;
+        }
       }
     };
-
-    if (config.timeout) {
-      options.timeout = config.timeout;
-    }
 
     getMap(BEFORE, method)(options, config);
 
@@ -211,7 +222,7 @@ export default function adapter(config) {
 
     request = wx[m](options);
 
-    getMap(AFTER, method)(request, config);
+    triggerSelfAndDefaults(AFTER, method, [request, config]);
 
     if (config.cancelToken) {
 
@@ -220,7 +231,7 @@ export default function adapter(config) {
           return;
         }
 
-        getMap(COMPLETE, method)(request, config);
+        triggerSelfAndDefaults(COMPLETE, method, [request, config]);
 
         request.abort();
 
