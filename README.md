@@ -17,7 +17,7 @@ let instance = axios.create({
 
 ## 使用 ##
 
-> 常规的http请求请查看[axios文档](https://github.com/axios/axios)。新增以下两个方法供上传和下载使用。
+> 除了`config`增加`onHeaderReceived`之外，常规的http请求请查看[axios文档](https://github.com/axios/axios)。新增以下两个方法供上传和下载使用。
 
 ```javascript
 // 上传
