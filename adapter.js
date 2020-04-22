@@ -57,6 +57,11 @@ const BEFORE = {
   defaults(options, config) {
     options.data = config.data;
     options.method = (config.method || 'get').toUpperCase();
+    // 这里让我想一想
+    let responseType = config.responseType;
+
+    options.dataType = responseType || 'json',
+    options.responseType = responseType === 'arraybuffer' ? 'arraybuffer' : 'text';
   },
 
   upload(options, config) {
@@ -66,7 +71,7 @@ const BEFORE = {
   },
 
   download(options, config) {
-    if (options.filePath) {
+    if (config.filePath) {
       options.filePath = config.filePath;
     }
   }
@@ -167,14 +172,11 @@ export default function adapter(config) {
     let request = null;
     let status = 'pending';
     let method = config.method || 'get';
-    let responseType = config.responseType;
 
     let options = {
       url,
       header: config.headers,
       timeout: config.timeout || 0,
-      dataType: responseType || 'json',
-      responseType: responseType === 'arraybuffer' ? 'arraybuffer' : 'text',
 
       success(res) {
         if (status !== 'pending') {
